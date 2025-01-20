@@ -37,7 +37,7 @@ public class WasteCategoriesRestController {
         WasteCategory theWasteCategory = wasteCategoryService.findById(categoryId);
  
          if (theWasteCategory == null) {
-             throw new NotFoundException("Employee id not found - " + categoryId);
+             throw new NotFoundException("WasteCategory id not found - " + categoryId);
          }
  
          return theWasteCategory;
@@ -78,7 +78,7 @@ public class WasteCategoriesRestController {
          // throw exception if null
  
          if (tempWasteCategory == null) {
-             throw new NotFoundException("Employee id not found - " + categoryId);
+             throw new NotFoundException("WasteCategory id not found - " + categoryId);
          }
  
          wasteCategoryService.deleteById(categoryId);
@@ -110,7 +110,7 @@ public class WasteCategoriesRestController {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(Exception exc) {
 
-        // create a StudentErrorResponse
+        // create a ErrorResponse
         ErrorResponse error = new ErrorResponse();
 
         error.setStatus(HttpStatus.BAD_REQUEST.value());
