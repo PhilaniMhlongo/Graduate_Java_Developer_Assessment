@@ -1,8 +1,10 @@
 package com.enviro.assessment.grad001.philanimhlongo.entity;
+
+
 import jakarta.persistence.*;
 @Entity
-@Table(name = "recycling_tip")
-public class RecyclingTip {
+@Table(name = "disposal_guideline")
+public class DisposalGuideline {
     // annotate the class as an entity and map to db table
 
     // define the fields
@@ -10,6 +12,7 @@ public class RecyclingTip {
     // annotate the fields with db column names
 
     // ** set up mapping to WasteCategory entity
+    
 
     // create constructors
 
@@ -21,22 +24,21 @@ public class RecyclingTip {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "tip", nullable = false)
-    private String tip;
+    @Column(name = "guideline", nullable = false)
+    private String guideline;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                          CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "waste_category_id")
     private WasteCategory wasteCategory;
 
-    
-    public RecyclingTip() {}
+    public DisposalGuideline() {}
 
-    public RecyclingTip(String tip) {
-        this.tip = tip;
+    public DisposalGuideline(String guideline) {
+        this.guideline = guideline;
     }
 
-    
+   
     public int getId() {
         return id;
     }
@@ -45,12 +47,12 @@ public class RecyclingTip {
         this.id = id;
     }
 
-    public String getTip() {
-        return tip;
+    public String getGuideline() {
+        return guideline;
     }
 
-    public void setTip(String tip) {
-        this.tip = tip;
+    public void setGuideline(String guideline) {
+        this.guideline = guideline;
     }
 
     public WasteCategory getWasteCategory() {
@@ -63,9 +65,9 @@ public class RecyclingTip {
 
     @Override
     public String toString() {
-        return "RecyclingTip{" +
+        return "DisposalGuideline{" +
                 "id=" + id +
-                ", tip='" + tip + '\'' +
+                ", guideline='" + guideline + '\'' +
                 '}';
     }
     
