@@ -6,10 +6,11 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.enviro.assessment.grad001.philanimhlongo.dao.WasteCategoryRepository;
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
-
+@Service
 public class WasteCategoryServiceImpl implements WasteCategoryService {
 
     private WasteCategoryRepository wasteCategoryRepository;

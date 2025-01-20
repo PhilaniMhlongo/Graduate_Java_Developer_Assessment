@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.enviro.assessment.grad001.philanimhlongo.dao.DisposalGuidelineRepository;
 
@@ -12,8 +13,8 @@ import com.enviro.assessment.grad001.philanimhlongo.entity.DisposalGuideline;
 
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 
-
-public class DisposalGuidelinesServiceImpl implements DisposalGuidelineService {
+@Service
+public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
 
 
 
@@ -21,7 +22,7 @@ public class DisposalGuidelinesServiceImpl implements DisposalGuidelineService {
     private DisposalGuidelineRepository disposalGuidelineRepository;
 
     @Autowired
-    public DisposalGuidelinesServiceImpl(DisposalGuidelineRepository theDisposalGuidelineRepository
+    public DisposalGuidelineServiceImpl(DisposalGuidelineRepository theDisposalGuidelineRepository
                                         ,WasteCategoryRepository theWasteCategoryRepository){
         
         this.disposalGuidelineRepository=theDisposalGuidelineRepository;

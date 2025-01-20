@@ -1,6 +1,7 @@
 package com.enviro.assessment.grad001.philanimhlongo.entity;
 import java.util.*;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 
@@ -36,11 +37,13 @@ public class WasteCategory {
     @OneToMany(mappedBy = "wasteCategory", 
                cascade = {CascadeType.PERSIST, CascadeType.MERGE, 
                          CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<DisposalGuideline> disposalGuidelines = new ArrayList<>();
 
     @OneToMany(mappedBy = "wasteCategory", 
                cascade = {CascadeType.PERSIST, CascadeType.MERGE, 
                          CascadeType.DETACH, CascadeType.REFRESH})
+    @JsonManagedReference
     private List<RecyclingTip> recyclingTips = new ArrayList<>();
 
     

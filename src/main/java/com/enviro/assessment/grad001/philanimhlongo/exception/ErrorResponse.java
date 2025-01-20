@@ -1,16 +1,16 @@
 package com.enviro.assessment.grad001.philanimhlongo.exception;
 
-public class RecyclingTipErrorResponse {
+public class ErrorResponse {
 
     private int status;
     private String message;
     private long timeStamp;
 
-    public RecyclingTipErrorResponse() {
+    public ErrorResponse() {
 
     }
 
-    public RecyclingTipErrorResponse(int status, String message, long timeStamp) {
+    public ErrorResponse(int status, String message, long timeStamp) {
         this.status = status;
         this.message = message;
         this.timeStamp = timeStamp;

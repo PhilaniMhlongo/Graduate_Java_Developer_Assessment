@@ -1,6 +1,8 @@
 package com.enviro.assessment.grad001.philanimhlongo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "disposal_guideline")
@@ -30,6 +32,7 @@ public class DisposalGuideline {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                          CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "waste_category_id")
+    @JsonBackReference
     private WasteCategory wasteCategory;
 
     public DisposalGuideline() {}
