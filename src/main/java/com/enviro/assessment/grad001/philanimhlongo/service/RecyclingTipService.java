@@ -11,6 +11,6 @@ public interface RecyclingTipService {
     RecyclingTip findById(int theId);
     RecyclingTip save(RecyclingTip theRecyclingTip);
     void deleteById(int theId);
-    List<RecyclingTip> findByRecyclingTipId(int recyclingTipId);
+    List<RecyclingTip> findByRecyclingTipId(int wasteCategoryId);
     
 }
