@@ -12,7 +12,7 @@ import com.enviro.assessment.grad001.philanimhlongo.exception.NotFoundException;
 import com.enviro.assessment.grad001.philanimhlongo.service.WasteCategoryService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class WasteCategoriesRestController {
     private WasteCategoryService wasteCategoryService;
 
@@ -51,11 +51,14 @@ public class WasteCategoriesRestController {
          // also just in case they pass an id in JSON ... set id to 0
          // this is to force a save of new item ... instead of update
  
-         theWasteCategory.setId(0);
+        theWasteCategory.setId(wasteCategoryService.latestId());
  
-         WasteCategory dbWasteCategory = wasteCategoryService.save(theWasteCategory);
- 
-         return dbWasteCategory;
+         // Get the category with the highest current id to determine the next available id
+
+        // Save the category
+        WasteCategory dbWasteCategory = wasteCategoryService.save(theWasteCategory);
+
+        return dbWasteCategory;
      }
  
      // add mapping for PUT /categories - update existing category

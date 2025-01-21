@@ -14,7 +14,7 @@ import com.enviro.assessment.grad001.philanimhlongo.service.DisposalGuidelineSer
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class DisposalGuidelineRestController {
     private DisposalGuidelineService  disposalGuidelineService;
 

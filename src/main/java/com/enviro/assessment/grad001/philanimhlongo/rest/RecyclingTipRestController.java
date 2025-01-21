@@ -16,7 +16,7 @@ import com.enviro.assessment.grad001.philanimhlongo.service.RecyclingTipService;
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class RecyclingTipRestController {
 
     private RecyclingTipService  recyclingTipService;

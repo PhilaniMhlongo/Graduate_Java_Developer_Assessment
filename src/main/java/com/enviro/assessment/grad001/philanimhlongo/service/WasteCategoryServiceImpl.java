@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.enviro.assessment.grad001.philanimhlongo.dao.WasteCategoryRepository;
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 @Service
@@ -45,14 +45,21 @@ public class WasteCategoryServiceImpl implements WasteCategoryService {
         return theWasteCategory;
     }
 
+    @Transactional
     @Override
-    public WasteCategory save(WasteCategory thewWasteCategory) {
-        return wasteCategoryRepository.save(thewWasteCategory);
+    public WasteCategory save(WasteCategory theWasteCategory) {
+        return wasteCategoryRepository.save(theWasteCategory);
     }
 
+    @Transactional
     @Override
     public void deleteById(int theId) {
         wasteCategoryRepository.deleteById(theId);
+    }
+
+    @Override
+    public int latestId() {
+        return wasteCategoryRepository.findLatestId();
     }
     
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.enviro.assessment.grad001.philanimhlongo.dao.RecyclingTipRepository;
 import com.enviro.assessment.grad001.philanimhlongo.dao.WasteCategoryRepository;
 import com.enviro.assessment.grad001.philanimhlongo.entity.RecyclingTip;
@@ -45,6 +45,7 @@ public class RecyclingTipServiceImpl implements RecyclingTipService {
         return theRecyclingTip;
     }
 
+    @Transactional
     @Override
     public RecyclingTip save(RecyclingTip theRecyclingTip) {
        // Verify that the waste category exists
@@ -64,6 +65,7 @@ public class RecyclingTipServiceImpl implements RecyclingTipService {
         return recyclingTipRepository.save(theRecyclingTip);
     }
 
+    @Transactional
     @Override
     public void deleteById(int theId) {
         Optional<RecyclingTip> tip = recyclingTipRepository.findById(theId);

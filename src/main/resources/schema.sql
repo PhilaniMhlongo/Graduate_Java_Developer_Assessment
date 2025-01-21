@@ -3,22 +3,21 @@ DROP TABLE IF EXISTS recycling_tip;
 DROP TABLE IF EXISTS disposal_guideline; 
 DROP TABLE IF EXISTS waste_category;
 
-
 CREATE TABLE waste_category (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE, 
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT NOT NULL
 );
 
 CREATE TABLE disposal_guideline (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     waste_category_id INT NOT NULL,
     guideline TEXT NOT NULL,
     FOREIGN KEY (waste_category_id) REFERENCES waste_category(id) ON DELETE CASCADE
 );
 
 CREATE TABLE recycling_tip (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     waste_category_id INT NOT NULL,
     tip TEXT NOT NULL,
     FOREIGN KEY (waste_category_id) REFERENCES waste_category(id) ON DELETE CASCADE

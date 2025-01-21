@@ -13,6 +13,8 @@ import com.enviro.assessment.grad001.philanimhlongo.entity.DisposalGuideline;
 
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
 
@@ -50,6 +52,7 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         return theDisposalGuideline;
     }
 
+    @Transactional
     @Override
     public DisposalGuideline save(DisposalGuideline theDisposalGuideline) {
        // Verify that the waste category exists
@@ -69,6 +72,7 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         return disposalGuidelineRepository.save(theDisposalGuideline);
     }
 
+    @Transactional
     @Override
     public void deleteById(int theId) {
        Optional<DisposalGuideline> disposalGuideline= disposalGuidelineRepository.findById(theId);
