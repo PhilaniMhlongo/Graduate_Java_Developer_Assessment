@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.enviro.assessment.grad001.philanimhlongo.dao.WasteCategoryRepository;
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
+import com.enviro.assessment.grad001.philanimhlongo.exception.NotFoundException;
 @Service
 public class WasteCategoryServiceImpl implements WasteCategoryService {
 
@@ -39,7 +40,7 @@ public class WasteCategoryServiceImpl implements WasteCategoryService {
         }
         else{
             // we didn't find wastecategory
-            throw new RuntimeException("Did not find wastecategory id - " + theId);
+            throw new NotFoundException("Did not find wastecategory id - " + theId);
         }
 
         return theWasteCategory;
@@ -48,6 +49,9 @@ public class WasteCategoryServiceImpl implements WasteCategoryService {
     @Transactional
     @Override
     public WasteCategory save(WasteCategory theWasteCategory) {
+        if (wasteCategoryRepository.existsByName(theWasteCategory.getName())) {
+            throw new IllegalArgumentException("Category with name '" + theWasteCategory.getName() + "' already exists.");
+        }
         return wasteCategoryRepository.save(theWasteCategory);
     }
 

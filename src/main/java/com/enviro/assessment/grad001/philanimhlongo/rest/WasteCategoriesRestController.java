@@ -1,5 +1,6 @@
 package com.enviro.assessment.grad001.philanimhlongo.rest;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 import com.enviro.assessment.grad001.philanimhlongo.exception.ErrorResponse;
 import com.enviro.assessment.grad001.philanimhlongo.exception.NotFoundException;
 import com.enviro.assessment.grad001.philanimhlongo.service.WasteCategoryService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -46,7 +49,7 @@ public class WasteCategoriesRestController {
      // add mapping for POST /categories - add new category
  
      @PostMapping("/categories")
-     public WasteCategory addCategory(@RequestBody WasteCategory theWasteCategory) {
+     public WasteCategory addCategory(@Valid @RequestBody WasteCategory theWasteCategory) {
  
          // also just in case they pass an id in JSON ... set id to 0
          // this is to force a save of new item ... instead of update
@@ -64,7 +67,13 @@ public class WasteCategoriesRestController {
      // add mapping for PUT /categories - update existing category
  
      @PutMapping("/categories")
-     public WasteCategory updateCategory(@RequestBody WasteCategory theWasteCategory) {
+     public WasteCategory updateCategory(@Valid @RequestBody WasteCategory theWasteCategory) {
+
+        WasteCategory existingCategory = wasteCategoryService.findById(theWasteCategory.getId());
+
+        if (existingCategory==null) {
+            throw new NotFoundException("WasteCategory not found ");
+        }
  
          WasteCategory dbWasteCategory = wasteCategoryService.save(theWasteCategory);
  
@@ -90,37 +99,37 @@ public class WasteCategoriesRestController {
      }
  
 
-    // Add an exception handler using @ExceptionHandler
+    // // Add an exception handler using @ExceptionHandler
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(NotFoundException exc) {
+    // @ExceptionHandler
+    // public ResponseEntity<ErrorResponse> handleException(NotFoundException exc) {
 
-        // create a ErrorResponse
+    //     // create a ErrorResponse
 
-        ErrorResponse error = new ErrorResponse();
+    //     ErrorResponse error = new ErrorResponse();
 
-        error.setStatus(HttpStatus.NOT_FOUND.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
+    //     error.setStatus(HttpStatus.NOT_FOUND.value());
+    //     error.setMessage(exc.getMessage());
+    //     error.setTimeStamp(System.currentTimeMillis());
 
-        // return ResponseEntity
+    //     // return ResponseEntity
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
+    //     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    // }
 
-    // add another exception handler ... to catch any exception (catch all)
+    // // add another exception handler ... to catch any exception (catch all)
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(Exception exc) {
+    // @ExceptionHandler
+    // public ResponseEntity<ErrorResponse> handleException(Exception exc) {
 
-        // create a ErrorResponse
-        ErrorResponse error = new ErrorResponse();
+    //     // create a ErrorResponse
+    //     ErrorResponse error = new ErrorResponse();
 
-        error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
+    //     error.setStatus(HttpStatus.BAD_REQUEST.value());
+    //     error.setMessage(exc.getMessage());
+    //     error.setTimeStamp(System.currentTimeMillis());
 
-        // return ResponseEntity
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
+    //     // return ResponseEntity
+    //     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    // }
 }

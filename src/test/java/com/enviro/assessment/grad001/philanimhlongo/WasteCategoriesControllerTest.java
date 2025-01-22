@@ -162,47 +162,47 @@ public class WasteCategoriesControllerTest {
                 .andExpect(status().isNotFound());
     }
     @Test
-public void createWasteCategoryWithInvalidDataHttpRequest() throws Exception {
-    WasteCategory invalidCategory = new WasteCategory();
-    // Not setting required fields
+    public void createWasteCategoryWithInvalidDataHttpRequest() throws Exception {
+        WasteCategory invalidCategory = new WasteCategory();
+        // Not setting required fields
 
-    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(invalidCategory)))
-            .andExpect(status().isBadRequest());
-}
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidCategory)))
+                .andExpect(status().isBadRequest());
+    }
 
-@Test
-public void updateNonExistentCategoryHttpRequest() throws Exception {
-    WasteCategory nonExistentCategory = new WasteCategory();
-    nonExistentCategory.setId(999);
-    nonExistentCategory.setName("Non-existent");
-    nonExistentCategory.setDescription("This category doesn't exist");
+    @Test
+    public void updateNonExistentCategoryHttpRequest() throws Exception {
+        WasteCategory nonExistentCategory = new WasteCategory();
+        nonExistentCategory.setId(999);
+        nonExistentCategory.setName("Non-existent");
+        nonExistentCategory.setDescription("This category doesn't exist");
 
-    mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(nonExistentCategory)))
-            .andExpect(status().isNotFound());
-}
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(nonExistentCategory)))
+                .andExpect(status().isNotFound());
+    }
 
-@Test
-public void createDuplicateWasteCategoryHttpRequest() throws Exception {
-    // First, create a category
-    WasteCategory category = new WasteCategory();
-    category.setName("Plastic");
-    category.setDescription("Plastic waste");
+    @Test
+    public void createDuplicateWasteCategoryHttpRequest() throws Exception {
+        // First, create a category
+        WasteCategory category = new WasteCategory();
+        category.setName("Plastic");
+        category.setDescription("Plastic waste");
 
-    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(category)))
-            .andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(category)))
+                .andExpect(status().isOk());
 
-    // Try to create another category with the same name
-    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(category)))
-            .andExpect(status().isBadRequest());
-}
+        // Try to create another category with the same name
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(category)))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
     public void updateCategoryWithInvalidDataHttpRequest() throws Exception {

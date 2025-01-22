@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.enviro.assessment.grad001.philanimhlongo.entity.RecyclingTip;
-
+import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 import com.enviro.assessment.grad001.philanimhlongo.exception.ErrorResponse;
 import com.enviro.assessment.grad001.philanimhlongo.exception.NotFoundException;
 import com.enviro.assessment.grad001.philanimhlongo.service.RecyclingTipService;
+
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -66,7 +68,13 @@ public class RecyclingTipRestController {
      // add mapping for PUT /tip - update existing tip
  
      @PutMapping("/tips")
-     public RecyclingTip updateRecyclingTip(@RequestBody RecyclingTip theRecyclingTip) {
+     public RecyclingTip updateRecyclingTip(@Valid @RequestBody RecyclingTip theRecyclingTip) {
+
+        RecyclingTip existingRecyclingTip =recyclingTipService.findById(theRecyclingTip.getId());
+
+        if (existingRecyclingTip==null) {
+            throw new NotFoundException("RecyclingTip not found ");
+        }
  
         RecyclingTip dbRecyclingTip = recyclingTipService.save(theRecyclingTip);
  
@@ -92,37 +100,37 @@ public class RecyclingTipRestController {
      }
  
 
-    // Add an exception handler using @ExceptionHandler
+    // // Add an exception handler using @ExceptionHandler
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(NotFoundException exc) {
+    // @ExceptionHandler
+    // public ResponseEntity<ErrorResponse> handleException(NotFoundException exc) {
 
-        // create a ErrorResponse
+    //     // create a ErrorResponse
 
-        ErrorResponse error = new ErrorResponse();
+    //     ErrorResponse error = new ErrorResponse();
 
-        error.setStatus(HttpStatus.NOT_FOUND.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
+    //     error.setStatus(HttpStatus.NOT_FOUND.value());
+    //     error.setMessage(exc.getMessage());
+    //     error.setTimeStamp(System.currentTimeMillis());
 
-        // return ResponseEntity
+    //     // return ResponseEntity
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
+    //     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    // }
 
-    // add another exception handler ... to catch any exception (catch all)
+    // // add another exception handler ... to catch any exception (catch all)
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(Exception exc) {
+    // @ExceptionHandler
+    // public ResponseEntity<ErrorResponse> handleException(Exception exc) {
 
-        // create a ErrorResponse
-        ErrorResponse error = new ErrorResponse();
+    //     // create a ErrorResponse
+    //     ErrorResponse error = new ErrorResponse();
 
-        error.setStatus(HttpStatus.BAD_REQUEST.value());
-        error.setMessage(exc.getMessage());
-        error.setTimeStamp(System.currentTimeMillis());
+    //     error.setStatus(HttpStatus.BAD_REQUEST.value());
+    //     error.setMessage(exc.getMessage());
+    //     error.setTimeStamp(System.currentTimeMillis());
 
-        // return ResponseEntity
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
+    //     // return ResponseEntity
+    //     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    // }
 }

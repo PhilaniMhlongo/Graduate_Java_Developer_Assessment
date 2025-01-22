@@ -8,4 +8,5 @@ import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
 public interface WasteCategoryRepository extends JpaRepository<WasteCategory,Integer> {
     @Query("SELECT MAX(w.id) FROM WasteCategory w")
     Integer findLatestId();
+    boolean existsByName(String name);
 }
