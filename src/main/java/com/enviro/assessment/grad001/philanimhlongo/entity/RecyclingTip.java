@@ -2,6 +2,8 @@ package com.enviro.assessment.grad001.philanimhlongo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "recycling_tip")
 public class RecyclingTip {
@@ -23,6 +25,8 @@ public class RecyclingTip {
     @Column(name = "id")
     private int id;
 
+    @NotBlank(message = "Tip content is required")
+    @Size(min = 5, max = 500, message = "Tip must be between 5 and 500 characters")
     @Column(name = "tip", nullable = false)
     private String tip;
 

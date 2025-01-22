@@ -58,7 +58,7 @@ public class WasteCategoryServiceImpl implements WasteCategoryService {
     }
 
     @Override
-    public int latestId() {
+    public Integer latestId() {
         return wasteCategoryRepository.findLatestId();
     }
     

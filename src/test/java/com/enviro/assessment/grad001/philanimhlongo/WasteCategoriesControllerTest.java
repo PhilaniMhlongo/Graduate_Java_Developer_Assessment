@@ -7,21 +7,22 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.*;
 
 @TestPropertySource("/application-test.properties")
 @AutoConfigureMockMvc
@@ -29,8 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class WasteCategoriesControllerTest {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Value("${sql.script.create.category}")
+    private String createCategorySQL;
+
+    @Value("${sql.script.delete.category}")
+    private String deleteCategorySQL;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Mock
     WasteCategoryService wasteCategoryServiceMock;
@@ -48,17 +55,14 @@ public class WasteCategoriesControllerTest {
 
     @BeforeEach
     public void setup() {
-        // Clear any existing data
-        entityManager.createQuery("DELETE FROM WasteCategory").executeUpdate();
+        // Clean up existing data
+        jdbcTemplate.execute(deleteCategorySQL);
         
-        // Create and persist initial test data
-        wasteCategory = new WasteCategory();
-        wasteCategory.setName("Glass");
-        wasteCategory.setDescription("Products made from silica including bottles, jars, and broken glass items");
-        entityManager.persist(wasteCategory);
-        entityManager.flush();
-        entityManager.clear(); // Clear persistence context
-        wasteCategory = entityManager.find(WasteCategory.class, wasteCategory.getId());
+        // Create initial test data using SQL script
+        jdbcTemplate.execute(createCategorySQL);
+        
+        // Retrieve the created category for test verification
+        wasteCategory = wasteCategoryService.findById(1);
     }
 
     @Test
@@ -66,7 +70,9 @@ public class WasteCategoriesControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].name").value("Glass"))
+                .andExpect(jsonPath("$[0].description").value("Products made from silica including bottles, jars, and broken glass items"));
     }
 
     @Test
@@ -83,36 +89,23 @@ public class WasteCategoriesControllerTest {
                 .andExpect(jsonPath("$.description").value("Products made from synthetic polymers"))
                 .andReturn();
 
-        // Extract ID from response
         WasteCategory createdCategory = objectMapper.readValue(
             result.getResponse().getContentAsString(),
             WasteCategory.class
         );
 
-        // Verify using returned ID
         WasteCategory verifyCategory = wasteCategoryService.findById(createdCategory.getId());
         assertNotNull(verifyCategory, "Waste category should be valid.");
+        assertEquals("Plastic", verifyCategory.getName());
     }
 
     @Test
     public void updateWasteCategoryHttpRequest() throws Exception {
-        // First create and persist a category we want to update
-        WasteCategory initialCategory = new WasteCategory();
-        initialCategory.setName("Original Glass");
-        initialCategory.setDescription("Original description");
-        entityManager.persist(initialCategory);
-        entityManager.flush();
-        
-        // Get the ID of the persisted category
-        Integer categoryId = initialCategory.getId();
-        
-        // Create update request
         WasteCategory updateCategory = new WasteCategory();
-        updateCategory.setId(categoryId);
+        updateCategory.setId(1);
         updateCategory.setName("Updated Glass");
         updateCategory.setDescription("Updated glass description");
         
-        // Perform update request
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateCategory)))
@@ -120,69 +113,122 @@ public class WasteCategoriesControllerTest {
                 .andExpect(jsonPath("$.name").value("Updated Glass"))
                 .andExpect(jsonPath("$.description").value("Updated glass description"));
         
-        // Verify the update in the database
-        WasteCategory updatedCategory = wasteCategoryService.findById(categoryId);
+        WasteCategory updatedCategory = wasteCategoryService.findById(1);
         assertNotNull(updatedCategory, "Updated category should exist");
-        assertEquals("Updated Glass", updatedCategory.getName(), "Name should be updated");
-        assertEquals("Updated glass description", updatedCategory.getDescription(), "Description should be updated");
+        assertEquals("Updated Glass", updatedCategory.getName());
+        assertEquals("Updated glass description", updatedCategory.getDescription());
     }
 
     @Test
-    @Transactional
     public void deleteWasteCategoryHttpRequest() throws Exception {
-        // First persist a new category specifically for this test
-        WasteCategory categoryToDelete = new WasteCategory();
-        categoryToDelete.setName("Category to Delete");
-        categoryToDelete.setDescription("This category will be deleted");
-        entityManager.persist(categoryToDelete);
-        entityManager.flush();
-        
-        Integer categoryId = categoryToDelete.getId();
-        
-        // Print initial state
-        System.out.println("Before deletion - Category ID: " + categoryId);
-        WasteCategory beforeDelete = wasteCategoryService.findById(categoryId);
-        System.out.println("Category exists before deletion: " + beforeDelete);
+        // Verify category exists before deletion
+        WasteCategory categoryBeforeDelete = wasteCategoryService.findById(1);
+        assertNotNull(categoryBeforeDelete, "Category should exist before deletion");
+        assertEquals("Glass", categoryBeforeDelete.getName(), "Category should have expected name before deletion");
 
         // Perform delete request
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/categories/{id}", categoryId))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/categories/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Deleted category id - " + categoryId))
+                .andExpect(content().string("Deleted category id - 1"))
                 .andReturn();
-                
-        System.out.println("Delete response: " + result.getResponse().getContentAsString());
-        
-        // Force a flush and clear of the persistence context
-        entityManager.flush();
-        entityManager.clear();
-        
-        // Try to find the category after deletion
-        try {
-            WasteCategory deletedCategory = wasteCategoryService.findById(categoryId);
-            System.out.println("After deletion - Category still exists: " + deletedCategory);
-            assertNull(deletedCategory, "Category should not exist after deletion");
-        } catch (RuntimeException e) {
-            System.out.println("After deletion - Exception occurred: " + e.getMessage());
-            // This would actually be the expected behavior if findById throws exception for non-existent entities
-        }
+
+        List<WasteCategory> allCategories = wasteCategoryService.findAll();
+        System.out.println("Categories before delete: " + allCategories);
+
+
+        // // Verify category no longer exists (check database directly)
+        // WasteCategory deletedCategory = wasteCategoryService.findById(1);
+        // assertNull(deletedCategory, "Category should not exist after deletion");
+
+        // Verify GET request returns 404 for deleted category
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", 1))
+                .andExpect(status().isNotFound());
     }
+
+
+
     @Test
     public void getWasteCategoryByIdHttpRequest() throws Exception {
-        // First verify the category exists
-        WasteCategory category = wasteCategoryService.findById(wasteCategory.getId());
-        assertNotNull(category, "Setup category should exist");
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", category.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value("Glass"));
+                .andExpect(jsonPath("$.name").value("Glass"))
+                .andExpect(jsonPath("$.description").value("Products made from silica including bottles, jars, and broken glass items"));
     }
 
-    // @Test
-    // public void getWasteCategoryNotFoundHttpRequest() throws Exception {
-    //     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", 99))
-    //             .andExpect(status().isNotFound())
-    //             .andExpect(jsonPath("$.status").value(404))
-    //             .andExpect(jsonPath("$.message").value("WasteCategory id not found - 99"));
-    // }
+    @Test
+    public void getWasteCategoryNotFoundHttpRequest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", 99))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+public void createWasteCategoryWithInvalidDataHttpRequest() throws Exception {
+    WasteCategory invalidCategory = new WasteCategory();
+    // Not setting required fields
+
+    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(invalidCategory)))
+            .andExpect(status().isBadRequest());
+}
+
+@Test
+public void updateNonExistentCategoryHttpRequest() throws Exception {
+    WasteCategory nonExistentCategory = new WasteCategory();
+    nonExistentCategory.setId(999);
+    nonExistentCategory.setName("Non-existent");
+    nonExistentCategory.setDescription("This category doesn't exist");
+
+    mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(nonExistentCategory)))
+            .andExpect(status().isNotFound());
+}
+
+@Test
+public void createDuplicateWasteCategoryHttpRequest() throws Exception {
+    // First, create a category
+    WasteCategory category = new WasteCategory();
+    category.setName("Plastic");
+    category.setDescription("Plastic waste");
+
+    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(category)))
+            .andExpect(status().isOk());
+
+    // Try to create another category with the same name
+    mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(category)))
+            .andExpect(status().isBadRequest());
+}
+
+    @Test
+    public void updateCategoryWithInvalidDataHttpRequest() throws Exception {
+        WasteCategory invalidUpdate = new WasteCategory();
+        invalidUpdate.setId(1);
+        invalidUpdate.setName(""); // Invalid empty name
+        
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidUpdate)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteNonExistentCategoryHttpRequest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/categories/{id}", 999))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void getAllCategoriesEmptyDatabaseHttpRequest() throws Exception {
+        // First delete all existing categories
+        jdbcTemplate.execute(deleteCategorySQL);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
 }

@@ -4,6 +4,8 @@ package com.enviro.assessment.grad001.philanimhlongo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "disposal_guideline")
 public class DisposalGuideline {
@@ -26,6 +28,8 @@ public class DisposalGuideline {
     @Column(name = "id")
     private int id;
 
+    @NotBlank(message = "Guideline content is required")
+    @Size(min = 10, max = 1000, message = "Guideline must be between 10 and 1000 characters")
     @Column(name = "guideline", nullable = false)
     private String guideline;
 

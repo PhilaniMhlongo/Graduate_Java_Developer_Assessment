@@ -4,6 +4,9 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "waste_category")
@@ -28,9 +31,14 @@ public class WasteCategory {
     @Column(name = "id")
     private int id;
 
+    @NotBlank(message = "Category name is required")
+    @Size(min = 2, max = 50, message = "Category name must be between 2 and 50 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s-]+$", message = "Category name can only contain letters, numbers, spaces, and hyphens")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @NotBlank(message = "Description is required")
+    @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
     @Column(name = "description", nullable = false)
     private String description;
 

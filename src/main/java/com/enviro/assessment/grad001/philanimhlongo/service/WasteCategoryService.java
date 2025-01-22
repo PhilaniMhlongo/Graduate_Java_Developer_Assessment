@@ -9,5 +9,5 @@ public interface WasteCategoryService {
     WasteCategory findById(int theId);
     WasteCategory save(WasteCategory thewWasteCategory);
     void deleteById(int theId);
-    int latestId();
+    Integer latestId();
 }
