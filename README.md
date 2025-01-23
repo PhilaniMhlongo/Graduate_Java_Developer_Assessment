@@ -1,27 +1,45 @@
 # WasteSortingAPI
 
 ## Overview
+The WasteSortingAPI is a RESTful backend service designed for the Enviro365 waste sorting mobile application. It facilitates sustainable waste management by providing users with functionalities like waste category lookup, disposal guidelines, and recycling tips. This API is developed using Spring Boot and supports CRUD operations for managing waste-related resources.
 
-The WasteSortingAPI provides endpoints for managing waste collection categories, tips, and guidelines. The API supports CRUD operations for these resources.
+## Features
+- **Categories:** Manage different types of waste categories.
+- **Tips:** Provide helpful recycling and waste management tips.
+- **Guidelines:** Offer detailed disposal guidelines for various waste types.
 
-## Endpoints
+---
+
+## API Endpoints
+
+### Base URL
+`http://localhost:8080/api/v1`
 
 ### Categories
 
-#### GET All Categories
+#### 1. Get All Categories
+- **Method:** GET
+- **Endpoint:** `/categories`
+- **Response:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Plastic",
+    "description": "Recyclable plastic waste"
+  }
+]
+```
 
-- **URL:** `http://localhost:8080/api/v1/categories`
+#### 2. Get Category by ID
+- **Method:** GET
+- **Endpoint:** `/categories/{id}`
+- **Path Variable:** `{id}` - ID of the category.
 
-#### GET Category by ID
-
-- **URL:** `http://localhost:8080/api/v1/categories/{id}`
-  - Replace `{id}` with the category ID.
-
-#### POST Add a New Category
-
-- **URL:** `http://localhost:8080/api/v1/categories`
-- **Body:**
-
+#### 3. Add a New Category
+- **Method:** POST
+- **Endpoint:** `/categories`
+- **Request Body:**
 ```json
 {
   "name": "Light Bulbs",
@@ -29,11 +47,10 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### PUT Update an Existing Category
-
-- **URL:** `http://localhost:8080/api/v1/categories`
-- **Body:**
-
+#### 4. Update an Existing Category
+- **Method:** PUT
+- **Endpoint:** `/categories`
+- **Request Body:**
 ```json
 {
   "id": 1,
@@ -42,27 +59,28 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### DELETE Delete a Category
+#### 5. Delete a Category
+- **Method:** DELETE
+- **Endpoint:** `/categories/{id}`
+- **Path Variable:** `{id}` - ID of the category.
 
-- **URL:** `http://localhost:8080/api/v1/categories/{id}`
-  - Replace `{id}` with the category ID.
+---
 
 ### Tips
 
-#### GET All Tips
+#### 1. Get All Tips
+- **Method:** GET
+- **Endpoint:** `/tips`
 
-- **URL:** `http://localhost:8080/api/v1/tips`
+#### 2. Get Tip by ID
+- **Method:** GET
+- **Endpoint:** `/tips/{id}`
+- **Path Variable:** `{id}` - ID of the tip.
 
-#### GET Tip by ID
-
-- **URL:** `http://localhost:8080/api/v1/tips/{id}`
-  - Replace `{id}` with the tip ID.
-
-#### POST Add a New Tip
-
-- **URL:** `http://localhost:8080/api/v1/tips`
-- **Body:**
-
+#### 3. Add a New Tip
+- **Method:** POST
+- **Endpoint:** `/tips`
+- **Request Body:**
 ```json
 {
   "tip": "Recycle plastics responsibly.",
@@ -72,11 +90,10 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### PUT Update an Existing Tip
-
-- **URL:** `http://localhost:8080/api/v1/tips`
-- **Body:**
-
+#### 4. Update an Existing Tip
+- **Method:** PUT
+- **Endpoint:** `/tips`
+- **Request Body:**
 ```json
 {
   "id": 1,
@@ -85,27 +102,28 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### DELETE Delete a Tip
+#### 5. Delete a Tip
+- **Method:** DELETE
+- **Endpoint:** `/tips/{id}`
+- **Path Variable:** `{id}` - ID of the tip.
 
-- **URL:** `http://localhost:8080/api/v1/tips/{id}`
-  - Replace `{id}` with the tip ID.
+---
 
 ### Guidelines
 
-#### GET All Guidelines
+#### 1. Get All Guidelines
+- **Method:** GET
+- **Endpoint:** `/guidelines`
 
-- **URL:** `http://localhost:8080/api/v1/guidelines`
+#### 2. Get Guideline by ID
+- **Method:** GET
+- **Endpoint:** `/guidelines/{id}`
+- **Path Variable:** `{id}` - ID of the guideline.
 
-#### GET Guideline by ID
-
-- **URL:** `http://localhost:8080/api/v1/guidelines/{id}`
-  - Replace `{id}` with the guideline ID.
-
-#### POST Add a New Guideline
-
-- **URL:** `http://localhost:8080/api/v1/guidelines`
-- **Body:**
-
+#### 3. Add a New Guideline
+- **Method:** POST
+- **Endpoint:** `/guidelines`
+- **Request Body:**
 ```json
 {
   "guideline": "Recycle plastics responsibly.",
@@ -117,11 +135,10 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### PUT Update an Existing Guideline
-
-- **URL:** `http://localhost:8080/api/v1/guidelines`
-- **Body:**
-
+#### 4. Update an Existing Guideline
+- **Method:** PUT
+- **Endpoint:** `/guidelines`
+- **Request Body:**
 ```json
 {
   "id": 4,
@@ -134,15 +151,33 @@ The WasteSortingAPI provides endpoints for managing waste collection categories,
 }
 ```
 
-#### DELETE Delete a Guideline
-
-- **URL:** `http://localhost:8080/api/v1/guidelines/{id}`
-  - Replace `{id}` with the guideline ID.
+#### 5. Delete a Guideline
+- **Method:** DELETE
+- **Endpoint:** `/guidelines/{id}`
+- **Path Variable:** `{id}` - ID of the guideline.
 
 ---
 
 ## Notes
 
-- Replace `{id}` in the URLs with the actual ID of the resource you wish to interact with.
+- Ensure the backend server is running at `http://localhost:8080`.
 - Use `application/json` as the content type for POST and PUT requests.
-- Ensure the server is running at `http://localhost:8080` before making requests.
+- Replace `{id}` in the URLs with the actual resource ID.
+
+## Technologies Used
+- **Backend Framework:** Spring Boot
+- **Database:** H2-Mem
+- **Tools:** Postman, Maven
+
+## Contribution Guidelines
+If you want to contribute to this project, please follow these steps:
+1. Fork the repository.
+2. Create a new feature branch.
+3. Commit your changes with clear messages.
+4. Open a pull request.
+
+---
+
+## Contact
+For any queries, please contact Philani at [mhlongophilani04@gmail.com](mailto:mhlongophilani04@gmail.com).
+

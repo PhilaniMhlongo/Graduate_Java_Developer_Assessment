@@ -35,6 +35,12 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
        return disposalGuidelineRepository.findAll();
     }
 
+    /**
+ * Retrieve a DisposalGuideline by its ID.
+ * @param theId the ID of the DisposalGuideline to retrieve
+ * @return DisposalGuideline the found DisposalGuideline object
+ * @throws RuntimeException if no DisposalGuideline is found with the given ID
+ */
     @Override
     public DisposalGuideline findById(int theId) {
         Optional<DisposalGuideline> result=disposalGuidelineRepository.findById(theId);
@@ -52,6 +58,14 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         return theDisposalGuideline;
     }
 
+    /**
+ * Save or update a DisposalGuideline in the database.
+ * Ensures that the associated WasteCategory exists before saving.
+ * 
+ * @param theDisposalGuideline the DisposalGuideline to save or update
+ * @return DisposalGuideline the saved or updated DisposalGuideline object
+ * @throws RuntimeException if the associated WasteCategory is not found
+ */
     @Transactional
     @Override
     public DisposalGuideline save(DisposalGuideline theDisposalGuideline) {
@@ -72,6 +86,14 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         return disposalGuidelineRepository.save(theDisposalGuideline);
     }
 
+    /**
+ * Delete a DisposalGuideline by its ID.
+ * Verifies that the DisposalGuideline exists before attempting to delete.
+ * 
+ * @param theId the ID of the DisposalGuideline to delete
+ * @throws RuntimeException if no DisposalGuideline is found with the given ID
+ */
+
     @Transactional
     @Override
     public void deleteById(int theId) {
@@ -81,6 +103,15 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         }
         disposalGuidelineRepository.deleteById(theId);
     }
+
+    /**
+ * Retrieve all DisposalGuidelines associated with a specific WasteCategory ID.
+ * Verifies that the WasteCategory exists before fetching the guidelines.
+ * 
+ * @param wasteCategoryId the ID of the WasteCategory
+ * @return List<DisposalGuideline> a list of DisposalGuidelines associated with the WasteCategory
+ * @throws RuntimeException if no WasteCategory is found with the given ID
+ */
 
     @Override
     public List<DisposalGuideline> findByWasteCategoryId(int wasteCategoryId) {

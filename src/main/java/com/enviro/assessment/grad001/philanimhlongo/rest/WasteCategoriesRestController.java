@@ -1,14 +1,12 @@
 package com.enviro.assessment.grad001.philanimhlongo.rest;
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.enviro.assessment.grad001.philanimhlongo.entity.WasteCategory;
-import com.enviro.assessment.grad001.philanimhlongo.exception.ErrorResponse;
 import com.enviro.assessment.grad001.philanimhlongo.exception.NotFoundException;
 import com.enviro.assessment.grad001.philanimhlongo.service.WasteCategoryService;
 
@@ -25,15 +23,25 @@ public class WasteCategoriesRestController {
         wasteCategoryService=theWasteCategoryService;
     }
 
-    // expose "/categories" and return a list of categories
+    /**
+ * Expose an endpoint to retrieve all WasteCategories.
+ * 
+ * @return List<WasteCategory> a list of all WasteCategories
+ */
+
     @GetMapping("/categories")
     public List<WasteCategory> findAll() {
         return wasteCategoryService.findAll();
     }
 
 
-     // add mapping for GET /categories/{categoryId}
-
+   /**
+ * Expose an endpoint to retrieve a WasteCategory by its ID.
+ * 
+ * @param categoryId the ID of the WasteCategory to retrieve
+ * @return WasteCategory the found WasteCategory object
+ * @throws NotFoundException if no WasteCategory is found with the given ID
+ */
      @GetMapping("/categories/{categoryId}")
      public WasteCategory getWasteCategory(@PathVariable int categoryId ) {
  
@@ -46,8 +54,14 @@ public class WasteCategoriesRestController {
          return theWasteCategory;
      }
  
-     // add mapping for POST /categories - add new category
- 
+     /**
+ * Expose an endpoint to add a new WasteCategory.
+ * If an ID is provided in the request body, it is replaced with the next available ID based on the current highest ID.
+ * 
+ * @param theWasteCategory the WasteCategory object to add
+ * @return WasteCategory the saved WasteCategory object
+ */
+
      @PostMapping("/categories")
      public WasteCategory addCategory(@Valid @RequestBody WasteCategory theWasteCategory) {
  
@@ -64,8 +78,15 @@ public class WasteCategoriesRestController {
         return dbWasteCategory;
      }
  
-     // add mapping for PUT /categories - update existing category
- 
+     /**
+ * Expose an endpoint to update an existing WasteCategory.
+ * The method first verifies if the WasteCategory exists before updating.
+ * 
+ * @param theWasteCategory the updated WasteCategory object
+ * @return WasteCategory the saved (updated) WasteCategory object
+ * @throws NotFoundException if no WasteCategory is found with the provided ID
+ */
+
      @PutMapping("/categories")
      public WasteCategory updateCategory(@Valid @RequestBody WasteCategory theWasteCategory) {
 
@@ -80,8 +101,14 @@ public class WasteCategoriesRestController {
          return dbWasteCategory;
      }
  
-     // add mapping for DELETE /categories/{categoryId} - delete category
- 
+   /**
+ * Expose an endpoint to delete a WasteCategory by its ID.
+ * Verifies that the WasteCategory exists before attempting to delete.
+ * 
+ * @param categoryId the ID of the WasteCategory to delete
+ * @return String a confirmation message indicating the WasteCategory was deleted
+ * @throws NotFoundException if no WasteCategory is found with the given ID
+ */
      @DeleteMapping("/categories/{categoryId}")
      public String deleteWasteCategory(@PathVariable int categoryId ) {
  
@@ -98,38 +125,4 @@ public class WasteCategoriesRestController {
          return "Deleted category id - " + categoryId;
      }
  
-
-    // // Add an exception handler using @ExceptionHandler
-
-    // @ExceptionHandler
-    // public ResponseEntity<ErrorResponse> handleException(NotFoundException exc) {
-
-    //     // create a ErrorResponse
-
-    //     ErrorResponse error = new ErrorResponse();
-
-    //     error.setStatus(HttpStatus.NOT_FOUND.value());
-    //     error.setMessage(exc.getMessage());
-    //     error.setTimeStamp(System.currentTimeMillis());
-
-    //     // return ResponseEntity
-
-    //     return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    // }
-
-    // // add another exception handler ... to catch any exception (catch all)
-
-    // @ExceptionHandler
-    // public ResponseEntity<ErrorResponse> handleException(Exception exc) {
-
-    //     // create a ErrorResponse
-    //     ErrorResponse error = new ErrorResponse();
-
-    //     error.setStatus(HttpStatus.BAD_REQUEST.value());
-    //     error.setMessage(exc.getMessage());
-    //     error.setTimeStamp(System.currentTimeMillis());
-
-    //     // return ResponseEntity
-    //     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    // }
 }
