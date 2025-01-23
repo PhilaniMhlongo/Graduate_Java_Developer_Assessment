@@ -22,13 +22,35 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 - **Endpoint:** `/categories`
 - **Response:**
 ```json
-[
-  {
+{
     "id": 1,
     "name": "Plastic",
-    "description": "Recyclable plastic waste"
-  }
-]
+    "description": "Materials made of synthetic or semi-synthetic organic compounds that can be molded into solid objects",
+    "disposalGuidelines": [
+        {
+            "id": 1,
+            "guideline": "Clean and dry plastic items before disposing of them."
+        },
+        {
+            "id": 2,
+            "guideline": "Avoid disposing of non-recyclable plastics."
+        }
+    ],
+    "recyclingTips": [
+        {
+            "id": 1,
+            "tip": "Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics."
+        },
+        {
+            "id": 2,
+            "tip": "Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!"
+        },
+        {
+            "id": 8,
+            "tip": "Use a washing bag for synthetic clothes and avoid microbeads in personal care products to reduce microplastic pollution."
+        }
+    ]
+}
 ```
 
 #### 2. Get Category by ID
@@ -54,8 +76,8 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 ```json
 {
   "id": 1,
-  "name": "Updated Category",
-  "description": "Updated description"
+  "name": "Plastic",
+  "description": "Disposable plastic"
 }
 ```
 
@@ -83,11 +105,12 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 - **Request Body:**
 ```json
 {
-  "tip": "Recycle plastics responsibly.",
-  "wasteCategory": {
-    "id": 1
-  }
+    "tip": "Recycle plastics responsibly.",
+    "wasteCategory": {
+        "id": 1
+    }
 }
+
 ```
 
 #### 4. Update an Existing Tip
@@ -96,9 +119,11 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 - **Request Body:**
 ```json
 {
-  "id": 1,
-  "title": "Updated Tip",
-  "content": "Updated content"
+    "id": 3,
+    "tip": "Remove all non-plastic components like metal rings or paper labels.",
+    "wasteCategory": {
+        "id": 1
+    }
 }
 ```
 
@@ -126,7 +151,7 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 - **Request Body:**
 ```json
 {
-  "guideline": "Recycle plastics responsibly.",
+  "guideline": "Compress plastic containers to save space in recycling bins",
   "wasteCategory": {
     "id": 1,
     "name": "Plastic",
@@ -142,7 +167,7 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 ```json
 {
   "id": 4,
-  "guideline": "Recycle plastics responsibly.",
+  "guideline": "Check for recycling symbols and numbers before disposal'",
   "wasteCategory": {
     "id": 1,
     "name": "Plastic",

@@ -79,6 +79,19 @@ public class WasteCategoryServiceImpl implements WasteCategoryService {
         return wasteCategoryRepository.save(theWasteCategory);
     }
 
+    @Transactional
+    @Override
+    public WasteCategory update(WasteCategory theWasteCategory) {
+        if (wasteCategoryRepository.existsByName(theWasteCategory.getName())) {
+           
+            return wasteCategoryRepository.save(theWasteCategory);
+        }
+        else{
+            throw new IllegalArgumentException("Category with name '" + theWasteCategory.getName() + "' does not exists.");
+        }
+        
+    }
+
     /**
  * Delete a WasteCategory by its ID.
  * 

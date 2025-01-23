@@ -121,5 +121,6 @@ public class DisposalGuidelineServiceImpl implements DisposalGuidelineService {
         }
         return disposalGuidelineRepository.findByWasteCategoryId(wasteCategoryId);
     }
+  
     
 }

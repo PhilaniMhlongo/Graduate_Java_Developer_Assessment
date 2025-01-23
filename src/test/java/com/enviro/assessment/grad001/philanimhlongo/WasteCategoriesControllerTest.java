@@ -71,22 +71,22 @@ public class WasteCategoriesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].name").value("Glass"))
-                .andExpect(jsonPath("$[0].description").value("Products made from silica including bottles, jars, and broken glass items"));
+                .andExpect(jsonPath("$[0].name").value("Plastic"))
+                .andExpect(jsonPath("$[0].description").value("Materials made of synthetic or semi-synthetic organic compounds that can be molded into solid objects"));
     }
 
     @Test
     public void createWasteCategoryHttpRequest() throws Exception {
         WasteCategory newCategory = new WasteCategory();
-        newCategory.setName("Plastic");
-        newCategory.setDescription("Products made from synthetic polymers");
+        newCategory.setName("Paper");
+        newCategory.setDescription("Products made from wood pulp or recycled paper materials including cardboard and newspapers");
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newCategory)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Plastic"))
-                .andExpect(jsonPath("$.description").value("Products made from synthetic polymers"))
+                .andExpect(jsonPath("$.name").value("Paper"))
+                .andExpect(jsonPath("$.description").value("Products made from wood pulp or recycled paper materials including cardboard and newspapers"))
                 .andReturn();
 
         WasteCategory createdCategory = objectMapper.readValue(
@@ -96,27 +96,27 @@ public class WasteCategoriesControllerTest {
 
         WasteCategory verifyCategory = wasteCategoryService.findById(createdCategory.getId());
         assertNotNull(verifyCategory, "Waste category should be valid.");
-        assertEquals("Plastic", verifyCategory.getName());
+        assertEquals("Paper", verifyCategory.getName());
     }
 
     @Test
     public void updateWasteCategoryHttpRequest() throws Exception {
         WasteCategory updateCategory = new WasteCategory();
         updateCategory.setId(1);
-        updateCategory.setName("Updated Glass");
-        updateCategory.setDescription("Updated glass description");
+        updateCategory.setName("Plastic");
+        updateCategory.setDescription("Updated Plastic description");
         
         mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateCategory)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Updated Glass"))
-                .andExpect(jsonPath("$.description").value("Updated glass description"));
+                .andExpect(jsonPath("$.name").value("Plastic"))
+                .andExpect(jsonPath("$.description").value("Updated Plastic description"));
         
         WasteCategory updatedCategory = wasteCategoryService.findById(1);
         assertNotNull(updatedCategory, "Updated category should exist");
-        assertEquals("Updated Glass", updatedCategory.getName());
-        assertEquals("Updated glass description", updatedCategory.getDescription());
+        assertEquals("Plastic", updatedCategory.getName());
+        assertEquals("Updated Plastic description", updatedCategory.getDescription());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class WasteCategoriesControllerTest {
         // Verify category exists before deletion
         WasteCategory categoryBeforeDelete = wasteCategoryService.findById(1);
         assertNotNull(categoryBeforeDelete, "Category should exist before deletion");
-        assertEquals("Glass", categoryBeforeDelete.getName(), "Category should have expected name before deletion");
+        assertEquals("Plastic", categoryBeforeDelete.getName(), "Category should have expected name before deletion");
 
         // Perform delete request
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/categories/{id}", 1))
@@ -152,8 +152,8 @@ public class WasteCategoriesControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/categories/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value("Glass"))
-                .andExpect(jsonPath("$.description").value("Products made from silica including bottles, jars, and broken glass items"));
+                .andExpect(jsonPath("$.name").value("Plastic"))
+                .andExpect(jsonPath("$.description").value("Materials made of synthetic or semi-synthetic organic compounds that can be molded into solid objects"));
     }
 
     @Test
@@ -189,8 +189,8 @@ public class WasteCategoriesControllerTest {
     public void createDuplicateWasteCategoryHttpRequest() throws Exception {
         // First, create a category
         WasteCategory category = new WasteCategory();
-        category.setName("Plastic");
-        category.setDescription("Plastic waste");
+        category.setName("Glass");
+        category.setDescription("Products made from silica including bottles, jars, and broken glass items");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)

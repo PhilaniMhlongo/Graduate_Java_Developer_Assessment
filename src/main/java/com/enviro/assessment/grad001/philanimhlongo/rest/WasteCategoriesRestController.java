@@ -96,7 +96,7 @@ public class WasteCategoriesRestController {
             throw new NotFoundException("WasteCategory not found ");
         }
  
-         WasteCategory dbWasteCategory = wasteCategoryService.save(theWasteCategory);
+         WasteCategory dbWasteCategory = wasteCategoryService.update(theWasteCategory);
  
          return dbWasteCategory;
      }

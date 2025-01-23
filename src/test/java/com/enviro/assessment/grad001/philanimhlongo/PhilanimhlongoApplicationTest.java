@@ -87,7 +87,7 @@ public class PhilanimhlongoApplicationTest {
         wasteCategoryRepository.deleteAll();
 
         // Create test category first
-        testCategory = new WasteCategory("Plastics", "Recyclable plastic materials");
+        testCategory = new WasteCategory("Plastics", "Materials made of synthetic or semi-synthetic organic compounds that can be molded into solid objects");
         testCategory = wasteCategoryRepository.save(testCategory);
     }
 
@@ -131,7 +131,7 @@ public class PhilanimhlongoApplicationTest {
         
         // Create and set up the guideline
         DisposalGuideline guideline = new DisposalGuideline();
-        guideline.setGuideline("Rinse containers before recycling");
+        guideline.setGuideline("Avoid disposing of non-recyclable plastics.");
         
         // Use the convenience method from WasteCategory to maintain bidirectional relationship
         category.addDisposalGuideline(guideline);
@@ -150,7 +150,7 @@ public class PhilanimhlongoApplicationTest {
                     "Category should have guidelines");
         
         DisposalGuideline retrievedGuideline = retrieved.get().getDisposalGuidelines().get(0);
-        assertEquals("Rinse containers before recycling", retrievedGuideline.getGuideline(),
+        assertEquals("Avoid disposing of non-recyclable plastics.", retrievedGuideline.getGuideline(),
                     "Guideline text should match");
         assertEquals(category.getId(), retrievedGuideline.getWasteCategory().getId(),
                     "Guideline should reference correct category");
@@ -164,7 +164,7 @@ public class PhilanimhlongoApplicationTest {
         
         // Create and set up the recycling tip
         RecyclingTip tip = new RecyclingTip();
-        tip.setTip("Flatten cardboard boxes before recycling");
+        tip.setTip("Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!");
         
         // Use the convenience method from WasteCategory to maintain bidirectional relationship
         category.addRecyclingTip(tip);
@@ -183,7 +183,7 @@ public class PhilanimhlongoApplicationTest {
                     "Category should have recycling tips");
         
         RecyclingTip retrievedTip = retrieved.get().getRecyclingTips().get(0);
-        assertEquals("Flatten cardboard boxes before recycling", retrievedTip.getTip(),
+        assertEquals("Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!", retrievedTip.getTip(),
                     "Tip text should match");
         assertEquals(category.getId(), retrievedTip.getWasteCategory().getId(),
                     "Tip should reference correct category");
@@ -192,9 +192,9 @@ public class PhilanimhlongoApplicationTest {
     @Test
     @Transactional
     public void testUpdateCategory() {
-        String newName = "Updated Plastics";
+        String newName = "Batteries";
         testCategory.setName(newName);
-        WasteCategory updated = wasteCategoryService.save(testCategory);
+        WasteCategory updated = wasteCategoryService.update(testCategory);
         
         assertEquals(newName, updated.getName(), "Category name should be updated");
         
@@ -214,12 +214,12 @@ public class PhilanimhlongoApplicationTest {
     @Test
     @Transactional
     public void testCreateRecyclingTip() {
-        RecyclingTip tip = new RecyclingTip("Separate different types of plastics");
+        RecyclingTip tip = new RecyclingTip("Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics.");
         tip.setWasteCategory(testCategory);
         RecyclingTip saved = recyclingTipRepository.save(tip);
         
         assertNotNull(saved.getId(), "Saved tip should have an ID");
-        assertEquals("Separate different types of plastics", saved.getTip(), "Tip content should match");
+        assertEquals("Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics.", saved.getTip(), "Tip content should match");
         assertEquals(testCategory.getId(), saved.getWasteCategory().getId(), "Category reference should match");
     }
 
@@ -229,12 +229,12 @@ public class PhilanimhlongoApplicationTest {
     @Transactional
     public void testUpdateRecyclingTip() {
         // Create initial tip
-        RecyclingTip tip = new RecyclingTip("Initial recycling tip");
+        RecyclingTip tip = new RecyclingTip("Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics.");
         tip.setWasteCategory(testCategory);
         RecyclingTip saved = recyclingTipRepository.save(tip);
         
         // Update tip
-        String updatedContent = "Updated recycling tip content";
+        String updatedContent = "Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!";
         saved.setTip(updatedContent);
         recyclingTipRepository.save(saved);
         
@@ -248,7 +248,7 @@ public class PhilanimhlongoApplicationTest {
     @Transactional
     public void testDeleteRecyclingTip() {
         // Create a tip
-        RecyclingTip tip = new RecyclingTip("Tip to be deleted");
+        RecyclingTip tip = new RecyclingTip("Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!");
         tip.setWasteCategory(testCategory);
         RecyclingTip saved = recyclingTipRepository.save(tip);
         
@@ -272,9 +272,9 @@ public class PhilanimhlongoApplicationTest {
     @Transactional
     public void testMultipleRecyclingTipsForCategory() {
         // Add multiple tips to the same category
-        RecyclingTip tip1 = new RecyclingTip("First recycling tip");
-        RecyclingTip tip2 = new RecyclingTip("Second recycling tip");
-        RecyclingTip tip3 = new RecyclingTip("Third recycling tip");
+        RecyclingTip tip1 = new RecyclingTip("Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics.");
+        RecyclingTip tip2 = new RecyclingTip("Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!");
+        RecyclingTip tip3 = new RecyclingTip("Use a washing bag for synthetic clothes and avoid microbeads in personal care products to reduce microplastic pollution.");
         
         testCategory.addRecyclingTip(tip1);
         testCategory.addRecyclingTip(tip2);
@@ -294,21 +294,21 @@ public class PhilanimhlongoApplicationTest {
             .map(RecyclingTip::getTip)
             .toList();
         
-        assertTrue(tipContents.contains("First recycling tip"), "Should contain first tip");
-        assertTrue(tipContents.contains("Second recycling tip"), "Should contain second tip");
-        assertTrue(tipContents.contains("Third recycling tip"), "Should contain third tip");
+        assertTrue(tipContents.contains("Learn to identify different plastic types by their recycling numbers. #1 (PET) and #2 (HDPE) are the most commonly recycled plastics."), "Should contain first tip");
+        assertTrue(tipContents.contains("Use reusable water bottles and shopping bags to minimize plastic waste. Small changes can make a big difference!"), "Should contain second tip");
+        assertTrue(tipContents.contains("Use a washing bag for synthetic clothes and avoid microbeads in personal care products to reduce microplastic pollution."), "Should contain third tip");
     }
 
     @Test
     @Transactional
     public void testCreateDisposalGuideline() {
         DisposalGuideline guideline = new DisposalGuideline(
-            "Separate hazardous materials and dispose at designated facilities");
+            "Avoid disposing of non-recyclable plastics.");
         guideline.setWasteCategory(testCategory);
         DisposalGuideline saved = disposalGuidelineRepository.save(guideline);
         
         assertNotNull(saved.getId(), "Saved guideline should have an ID");
-        assertEquals("Separate hazardous materials and dispose at designated facilities", 
+        assertEquals("Avoid disposing of non-recyclable plastics.", 
                     saved.getGuideline(), "Guideline content should match");
         assertEquals(testCategory.getId(), saved.getWasteCategory().getId(), 
                     "Category reference should match");
@@ -320,12 +320,12 @@ public class PhilanimhlongoApplicationTest {
     public void testUpdateDisposalGuideline() {
         // Create initial guideline
         DisposalGuideline guideline = new DisposalGuideline(
-            "Initial disposal instruction for testing");
+            "Clean and dry plastic items before disposing of them.");
         guideline.setWasteCategory(testCategory);
         DisposalGuideline saved = disposalGuidelineRepository.save(guideline);
         
         // Update guideline
-        String updatedContent = "Updated disposal instruction with more detailed information";
+        String updatedContent = "Avoid disposing of non-recyclable plastics.";
         saved.setGuideline(updatedContent);
         disposalGuidelineRepository.save(saved);
         
@@ -341,7 +341,7 @@ public class PhilanimhlongoApplicationTest {
     public void testDeleteDisposalGuideline() {
         // Create a guideline
         DisposalGuideline guideline = new DisposalGuideline(
-            "This guideline will be deleted after testing");
+            "Break down the box completely flat");
         guideline.setWasteCategory(testCategory);
         DisposalGuideline saved = disposalGuidelineRepository.save(guideline);
         
@@ -366,11 +366,11 @@ public class PhilanimhlongoApplicationTest {
     public void testMultipleDisposalGuidelinesForCategory() {
         // Add multiple guidelines to the same category
         DisposalGuideline guideline1 = new DisposalGuideline(
-            "First guideline: Sort materials properly");
+            "Break down the box completely flat");
         DisposalGuideline guideline2 = new DisposalGuideline(
-            "Second guideline: Clean containers before disposal");
+            "Remove any tape, staples, or plastic materials");
         DisposalGuideline guideline3 = new DisposalGuideline(
-            "Third guideline: Use appropriate disposal bins");
+            "Keep dry and clean");
         
         testCategory.addDisposalGuideline(guideline1);
         testCategory.addDisposalGuideline(guideline2);
@@ -390,11 +390,11 @@ public class PhilanimhlongoApplicationTest {
             .map(DisposalGuideline::getGuideline)
             .toList();
         
-        assertTrue(guidelineContents.contains("First guideline: Sort materials properly"), 
+        assertTrue(guidelineContents.contains("Break down the box completely flat"), 
                   "Should contain first guideline");
-        assertTrue(guidelineContents.contains("Second guideline: Clean containers before disposal"), 
+        assertTrue(guidelineContents.contains("Remove any tape, staples, or plastic materials"), 
                   "Should contain second guideline");
-        assertTrue(guidelineContents.contains("Third guideline: Use appropriate disposal bins"), 
+        assertTrue(guidelineContents.contains("Keep dry and clean"), 
                   "Should contain third guideline");
     }
 
