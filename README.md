@@ -194,13 +194,6 @@ The WasteSortingAPI is a RESTful backend service designed for the Enviro365 wast
 - **Database:** H2-Mem
 - **Tools:** Postman, Maven
 
-## Contribution Guidelines
-If you want to contribute to this project, please follow these steps:
-1. Fork the repository.
-2. Create a new feature branch.
-3. Commit your changes with clear messages.
-4. Open a pull request.
-
 ---
 
 ## Contact
